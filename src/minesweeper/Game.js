@@ -78,6 +78,12 @@ export class Game {
     }
   }
 
+  revealAdjacent(index) {
+    if (this.grid.isRevealedAt(index) && (this.adjacentFlagCount(index) === Grid.adjacentMineCount(this.grid.squares[index]))) {
+      this.grid.forEachAdjacent(index, this.reveal.bind(this));
+    }
+  }
+
   doReveal(index) {
     if (this.grid.isRevealedAt(index)) {
       return;
@@ -99,6 +105,16 @@ export class Game {
 
   allSquaresRevealed() {
     return this.grid.revealCount >= (this.grid.squareCount - this.grid.mineCount);
+  }
+
+  adjacentFlagCount(index) {
+    let count = 0;
+    this.grid.forEachAdjacent(index, i => {
+      if (this.grid.isFlaggedAt(i)) {
+        count++;
+      }
+    });
+    return count;
   }
 
   revealAllMines() {

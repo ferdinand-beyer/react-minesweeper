@@ -127,7 +127,11 @@ class Minesweeper extends React.Component {
   }
 
   handleSquareClick(index) {
-    this.game.reveal(index);
+    if (this.game.grid.isRevealedAt(index)) {
+      this.game.revealAdjacent(index);
+    } else {
+      this.game.reveal(index);
+    }
     this.syncGameState();
   }
 

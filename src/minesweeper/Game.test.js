@@ -156,9 +156,9 @@ describe('When the player reveals the last square', () => {
     game.reveal(11);
   });
 
-  // 0  1  2  3
+  // 0  1  2  3!
   // 4  5  6  7
-  // 8  9 10 11
+  // 8! 9 10 11
 
   test('the game is won', () => {
     expect(game.isWon()).toBeTruthy();
@@ -170,3 +170,59 @@ describe('When the player reveals the last square', () => {
     });
   });
 });
+
+describe('When the player reveals adjacent squares', () => {
+  let game;
+
+  beforeEach(() => {
+    game = buildGame(3, 4, [3, 8]);
+  });
+
+  // 0  1  2  3!
+  // 4  5  6  7
+  // 8! 9 10 11
+
+  describe('and the target square is not revealed', () => {
+    test('nothing happens', () => {
+      game.revealAdjacent(5);
+      expect(game.grid.revealCount).toBe(0);
+    });
+  });
+
+  describe('and the target square is revealed', () => {
+    beforeEach(() => {
+      game.reveal(5);
+    });
+
+    test('and no adjacent squares are flagged, nothing happens', () => {
+      game.revealAdjacent(5);
+      expect(game.grid.revealCount).toBe(1);
+    });
+
+    test('and too many adjacent squares are flagged, nothing happens', () => {
+      game.toggleFlag(0);
+      game.toggleFlag(8);
+      game.revealAdjacent(5);
+      expect(game.grid.revealCount).toBe(1);
+    });
+
+    describe('and the number of adjacent flag equals the number of adjacent mines', () => {
+      test('all adjacent non-flagged squares are revealed', () => {
+        game.toggleFlag(8);
+        game.revealAdjacent(5);
+        for (let i of [0, 1, 2, 6, 10, 9, 4]) {
+          expect(game.grid.isRevealedAt(i)).toBeTruthy();
+        }
+      });
+
+      test('adjacent flagged squares are not revealed', () => {
+        game.toggleFlag(8);
+        game.revealAdjacent(5);
+        expect(game.grid.isRevealedAt(8)).toBeFalsy();
+      });
+    })
+  });
+});
+
+// TODO: When game-over, mark correct/incorrect flags
+// TODO: Protect first move
