@@ -35,6 +35,14 @@ export class Grid {
     this.squares = Array(this.squareCount).fill(0);
   }
 
+  isRevealedAt(index) {
+    return this.testSquareFlag(index, REVEALED);
+  }
+
+  isFlaggedAt(index) {
+    return this.testSquareFlag(index, FLAGGED);
+  }
+
   adjacentIndexes(index) {
     let indexes = [];
     this.forEachAdjacent(index, indexes.push.bind(indexes));
@@ -60,11 +68,41 @@ export class Grid {
     west && f(index - 1);
   }
 
+  revealAt(index) {
+    this.setSquareFlag(index, REVEALED);
+    this.revealCount++;
+  }
+
   placeMineAt(index) {
-    this.squares[index] |= MINE;
+    if (this.testSquareFlag(index, MINE)) {
+      return;
+    }
+    this.setSquareFlag(index, MINE);
     this.mineCount++;
     this.forEachAdjacent(index, i => {
       this.squares[i] = ((this.squares[i] & ADJACENT_MASK) + 1) | (this.squares[i] & ~ADJACENT_MASK);
     });
+  }
+
+  placeFlagAt(index) {
+    this.setSquareFlag(index, FLAGGED);
+    this.flagCount++;
+  }
+
+  clearFlagAt(index) {
+    this.clearSquareFlag(index, FLAGGED);
+    this.flagCount--;
+  }
+
+  testSquareFlag(index, flag) {
+    return (this.squares[index] & flag) !== 0;
+  }
+
+  setSquareFlag(index, flag) {
+    this.squares[index] |= flag;
+  }
+
+  clearSquareFlag(index, flag) {
+    this.squares[index] &= ~flag;
   }
 }

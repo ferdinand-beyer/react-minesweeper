@@ -1,4 +1,6 @@
-import { Grid, containsMine, adjacentMineCount } from './Grid.js';
+import {
+  Grid, containsMine, adjacentMineCount, isRevealed, isFlagged
+} from './Grid.js';
 
 describe('A new Grid', () => {
   const grid = new Grid(7, 9);
@@ -53,8 +55,12 @@ describe('A grid finds correct adjacent squares', () => {
 });
 
 describe('When placing a mine in the grid', () => {
-  const grid = new Grid(3, 3);
-  grid.placeMineAt(4);
+  let grid;
+
+  beforeEach(() => {
+    grid = new Grid(3, 3);
+    grid.placeMineAt(4);
+  });
 
   test('the mine count is incremented', () => {
     expect(grid.mineCount).toBe(1);
@@ -72,6 +78,13 @@ describe('When placing a mine in the grid', () => {
       1, 0, 1,
       1, 1, 1,
     ]);
+  });
+
+  describe('and the square already contains a mine', () => {
+    test('the mine count is not changed', () => {
+      grid.placeMineAt(4);
+      expect(grid.mineCount).toBe(1);
+    });
   });
 });
 
@@ -91,5 +104,41 @@ describe('When placing multiple mines in the grid', () => {
       3, 5, 3, 2,
       2, 3, 3, 1
     ]);
+  });
+});
+
+describe('When revealing a square', () => {
+  let grid;
+
+  beforeEach(() => {
+    grid = new Grid(4, 4);
+    grid.revealAt(3);
+  });
+
+  test('the square is marked as revealed', () => {
+    expect(grid.isRevealedAt(3)).toBeTruthy();
+    expect(isRevealed(grid.squares[3])).toBeTruthy();
+  });
+
+  test('the reveal count is incremented', () => {
+    expect(grid.revealCount).toBe(1);
+  });
+});
+
+describe('When placing a flag', () => {
+  let grid;
+
+  beforeEach(() => {
+    grid = new Grid(4, 4);
+    grid.placeFlagAt(3);
+  });
+
+  test('the square is marked as flagged', () => {
+    expect(grid.isFlaggedAt(3)).toBeTruthy();
+    expect(isFlagged(grid.squares[3])).toBeTruthy();
+  });
+
+  test('the flag count is incremented', () => {
+    expect(grid.flagCount).toBe(1);
   });
 });

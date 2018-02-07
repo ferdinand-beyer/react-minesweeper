@@ -38,6 +38,10 @@
   background-color: #eee;
 }
 
+.Minesweeper td.flagged {
+  color: #00f;
+}
+
 .Minesweeper td.exploded {
   background-color: #f00;
 }

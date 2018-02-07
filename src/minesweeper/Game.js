@@ -20,16 +20,15 @@ const RUNNING = 0;
 const WON = 1;
 const LOST = 2;
 
-// Beginner: 9x9, 10
-// Intermediate: 16x16, 40
-// Expert: 16x30, 99
-
 export class Game {
   constructor(grid) {
     this.grid = grid;
     this.status = RUNNING;
   }
 
+  // Beginner: 9x9, 10
+  // Intermediate: 16x16, 40
+  // Expert: 16x30, 99
   static build(rowCount, columnCount, mineCount) {
     const grid = new Grid.Grid(rowCount, columnCount);
     for (const index of randomIndexes(grid.squareCount, mineCount)) {
@@ -50,6 +49,10 @@ export class Game {
     return this.grid.squares;
   }
 
+  get remainingMineCount() {
+    return this.grid.mineCount - this.grid.flagCount;
+  }
+
   isOver() {
     return this.status !== RUNNING;
   }
@@ -59,8 +62,13 @@ export class Game {
   }
 
   toggleFlag(index) {
-    if ((this.grid.squares[index] & Grid.REVEALED) === 0) {
-      this.grid.squares[index] ^= Grid.FLAGGED;
+    const grid = this.grid;
+    if (!grid.isRevealedAt(index)) {
+      if (grid.isFlaggedAt(index)) {
+        grid.clearFlagAt(index);
+      } else {
+        grid.placeFlagAt(index);
+      }
     }
   }
 

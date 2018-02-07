@@ -4,12 +4,13 @@ import * as GridMod from '../minesweeper/Grid.js';
 import './Minesweeper.css'
 
 const NBSP = '\u00A0';
+const FLAG = '\u2691';
 
 class Square extends React.Component {
   text() {
     const value = this.props.value;
     if (GridMod.isFlagged(value)) {
-      return '\u2691';
+      return FLAG;
     }
     if (!GridMod.isRevealed(value)) {
       return NBSP;
@@ -23,6 +24,9 @@ class Square extends React.Component {
 
   className() {
     const value = this.props.value;
+    if (GridMod.isFlagged(value)) {
+      return 'flagged';
+    }
     if (!GridMod.isRevealed(value)) {
       return 'active';
     }
@@ -107,10 +111,12 @@ class Minesweeper extends React.Component {
   }
 
   getGameState() {
+    const game = this.game;
     return {
-      rows: this.game.rowCount,
-      cols: this.game.columnCount,
-      squares: [...this.game.squares],
+      rows: game.rowCount,
+      cols: game.columnCount,
+      squares: [...game.squares],
+      minesRemaining: game.remainingMineCount,
     };
   }
 
@@ -129,9 +135,12 @@ class Minesweeper extends React.Component {
   }
 
   render() {
-    const { rows, cols, squares } = this.state;
+    const { rows, cols, squares, minesRemaining } = this.state;
     return (
       <div className="Minesweeper">
+        <header>
+          Remaining: {minesRemaining}
+        </header>
         <Grid
           rows={rows}
           cols={cols}
