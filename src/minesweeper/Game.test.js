@@ -9,12 +9,14 @@ function buildGame(rowCount, columnCount, mineIndexes) {
   return new Game(grid);
 }
 
-test('place exact number of random mines', () => {
-  const game = Game.build(9, 9, 10);
-  expect(game.grid.mineCount).toBe(10);
+describe('When starting a new game', () => {
+  test('the grid contains the correct nuber of mines', () => {
+    const game = Game.build(9, 9, 10);
+    expect(game.grid.mineCount).toBe(10);
+  });
 });
 
-describe('when the player reveals a square', () => {
+describe('When the player reveals a square', () => {
   let game;
 
   //  0  1  2  3 | 0 0 0 0
@@ -26,11 +28,11 @@ describe('when the player reveals a square', () => {
     game = buildGame(4, 4, [8, 13, 15]);
   });
 
-  describe('containing no mine', () => {
+  describe('and the square contains no mine', () => {
     test('the number of adjacent mines is shown', () => {
       game.reveal(5);
       game.squares.forEach((square, index) => {
-        expect(Game.isRevealed(square)).toBe(index === 5);
+        expect(Grid.isRevealed(square)).toBe(index === 5);
       });
     });
 
@@ -38,18 +40,18 @@ describe('when the player reveals a square', () => {
       game.reveal(0);
       const revealedIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11];
       game.squares.forEach((square, index) => {
-        expect(Game.isRevealed(square)).toBe(revealedIndexes.includes(index));
+        expect(Grid.isRevealed(square)).toBe(revealedIndexes.includes(index));
       });
     });
   });
 
-  describe('containing a mine', () => {
+  describe('and the square contains a mine', () => {
     beforeEach(() => {
       game.reveal(8);
     });
 
     test('the mine explodes', () => {
-      expect(Game.isExploded(game.squares[8]));
+      expect(Grid.isExploded(game.squares[8]));
     });
 
     test('he loses the game', () => {
@@ -59,7 +61,7 @@ describe('when the player reveals a square', () => {
 
     test('all mines are revealed', () => {
       for (const square of game.squares) {
-        expect(Game.containsMine(square)).toBe(Game.isRevealed(square));
+        expect(Grid.containsMine(square)).toBe(Grid.isRevealed(square));
       }
     });
   });
@@ -70,7 +72,7 @@ describe('When the user flags a square', () => {
     test('the square is flagged', () => {
       const game = Game.build(9, 9, 10);
       game.toggleFlag(5);
-      expect(Game.isFlagged(game.squares[5])).toBeTruthy();
+      expect(Grid.isFlagged(game.squares[5])).toBeTruthy();
     });
   });
 
@@ -79,7 +81,7 @@ describe('When the user flags a square', () => {
       const game = buildGame(9, 9, [0]);
       game.reveal(1);
       game.toggleFlag(1);
-      expect(Game.isFlagged(game.squares[1])).toBeFalsy();
+      expect(Grid.isFlagged(game.squares[1])).toBeFalsy();
     });
   });
 });

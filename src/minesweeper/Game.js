@@ -16,12 +16,6 @@ function randomIndexes(n, k) {
   return randomSample(Array(n).keys(), k);
 }
 
-const ADJACENT_MASK = 0xF;
-const MINE = 0x10;
-const REVEALED = 0x20;
-const FLAGGED = 0x40;
-const EXPLODED = 0x80;
-
 const RUNNING = 0;
 const WON = 1;
 const LOST = 2;
@@ -42,26 +36,6 @@ export class Game {
       grid.placeMineAt(index);
     }
     return new Game(grid);
-  }
-
-  static containsMine(square) {
-    return (square & MINE) !== 0;
-  }
-
-  static isRevealed(square) {
-    return (square & REVEALED) !== 0;
-  }
-
-  static isExploded(square) {
-    return (square & EXPLODED) !== 0;
-  }
-
-  static isFlagged(square) {
-    return (square & FLAGGED) !== 0;
-  }
-
-  static adjacentMineCount(square) {
-    return square & ADJACENT_MASK;
   }
 
   get rowCount() {
@@ -85,19 +59,19 @@ export class Game {
   }
 
   toggleFlag(index) {
-    if ((this.grid.squares[index] & REVEALED) === 0) {
-      this.grid.squares[index] ^= FLAGGED;
+    if ((this.grid.squares[index] & Grid.REVEALED) === 0) {
+      this.grid.squares[index] ^= Grid.FLAGGED;
     }
   }
 
   reveal(index) {
     let square = this.grid.squares[index];
-    if (square & REVEALED) {
+    if (square & Grid.REVEALED) {
       return;
     }
-    this.grid.squares[index] |= REVEALED;
-    if (square & MINE) {
-      this.grid.squares[index] |= EXPLODED;
+    this.grid.squares[index] |= Grid.REVEALED;
+    if (square & Grid.MINE) {
+      this.grid.squares[index] |= Grid.EXPLODED;
       this.revealAllMines();
       this.status = LOST;
     } else if (Grid.adjacentMineCount(this.grid.squares[index]) === 0) {
@@ -107,8 +81,8 @@ export class Game {
 
   revealAllMines() {
     this.grid.squares.forEach((square, index, array) => {
-      if (square & MINE) {
-        array[index] |= REVEALED;
+      if (square & Grid.MINE) {
+        array[index] |= Grid.REVEALED;
       }
     });
   }

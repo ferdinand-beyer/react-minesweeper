@@ -1,5 +1,6 @@
 import React from 'react';
 import Game from '../minesweeper/Game.js';
+import * as GridMod from '../minesweeper/Grid.js';
 import './Minesweeper.css'
 
 const NBSP = '\u00A0';
@@ -7,30 +8,30 @@ const NBSP = '\u00A0';
 class Square extends React.Component {
   text() {
     const value = this.props.value;
-    if (Game.isFlagged(value)) {
+    if (GridMod.isFlagged(value)) {
       return '\u2691';
     }
-    if (!Game.isRevealed(value)) {
+    if (!GridMod.isRevealed(value)) {
       return NBSP;
     }
-    if (Game.containsMine(value)) {
+    if (GridMod.containsMine(value)) {
       return 'X';
     }
-    const count = Game.adjacentMineCount(value);
+    const count = GridMod.adjacentMineCount(value);
     return (count === 0) ? NBSP : count;
   }
 
   className() {
     const value = this.props.value;
-    if (!Game.isRevealed(value)) {
+    if (!GridMod.isRevealed(value)) {
       return 'active';
     }
     const classes = [
       'revealed',
     ];
-    if (!Game.containsMine(value)) {
-      classes.push('adjacent' + Game.adjacentMineCount(value));
-    } else if (Game.isExploded(value)) {
+    if (!GridMod.containsMine(value)) {
+      classes.push('adjacent' + GridMod.adjacentMineCount(value));
+    } else if (GridMod.isExploded(value)) {
       classes.push('exploded');
     }
     return classes.join(' ');

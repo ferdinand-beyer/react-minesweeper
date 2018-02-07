@@ -1,8 +1,8 @@
-const ADJACENT_MASK = 0xF;
-const MINE = 0x10;
-const REVEALED = 0x20;
-const FLAGGED = 0x40;
-const EXPLODED = 0x80;
+export const ADJACENT_MASK = 0xF;
+export const MINE = 0x10;
+export const REVEALED = 0x20;
+export const FLAGGED = 0x40;
+export const EXPLODED = 0x80;
 
 export function containsMine(square) {
   return (square & MINE) !== 0;
