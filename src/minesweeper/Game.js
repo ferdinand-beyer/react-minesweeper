@@ -1,4 +1,4 @@
-import * as Grid from './minesweeper/Grid.js';
+import * as Grid from './Grid.js';
 
 function randomSample(sequence, k) {
   const pool = Array.from(sequence);

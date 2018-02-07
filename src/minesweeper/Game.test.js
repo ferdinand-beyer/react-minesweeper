@@ -1,5 +1,5 @@
-import { Game } from './MinesweeperGame.js';
-import * as Grid from './minesweeper/Grid.js';
+import { Game } from './Game.js';
+import * as Grid from './Grid.js';
 
 function buildGame(rowCount, columnCount, mineIndexes) {
   const grid = new Grid.Grid(rowCount, columnCount);

@@ -1,5 +1,5 @@
 import React from 'react';
-import Game from '../MinesweeperGame';
+import Game from '../minesweeper/Game.js';
 import './Minesweeper.css'
 
 const NBSP = '\u00A0';
