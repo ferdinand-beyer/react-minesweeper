@@ -1,0 +1,78 @@
+
+.Minesweeper {
+  margin: 2em;
+  display: inline-block;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.Minesweeper .grid {
+  border: 1px solid black;
+}
+
+.Minesweeper table {
+  border-collapse: collapse;
+}
+
+.Minesweeper td {
+  border: 2px solid white;
+  border-radius: 2px;
+  background-color: #ccc;
+  color: #000;
+  width: 1.2em;
+  height: 1.2em;
+  padding: 0.1em;
+  text-align: center;
+  font-weight: 800;
+  cursor: default;
+}
+
+.Minesweeper td.active {
+  cursor: pointer;
+}
+
+.Minesweeper td.active:hover {
+  background-color: #ddd;
+}
+
+.Minesweeper td.revealed {
+  background-color: #eee;
+}
+
+.Minesweeper td.exploded {
+  background-color: #f00;
+}
+
+.Minesweeper td.adjacent0 {
+}
+
+.Minesweeper .adjacent1 {
+  color: #0024F5;
+}
+
+.Minesweeper .adjacent2 {
+  color: #377D22;
+}
+
+.Minesweeper .adjacent3 {
+  color: #EB3324;
+}
+
+.Minesweeper .adjacent4 {
+  color: #000C7A;
+}
+
+.Minesweeper .adjacent5 {
+  color: #75140C;
+}
+
+.Minesweeper .adjacent6 {
+  color: #367E7F;
+}
+
+.Minesweeper .adjacent7 {
+  color: #000;
+}
+
+.Minesweeper .adjacent8 {
+  color: #808080;
+}
