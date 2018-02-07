@@ -30,9 +30,6 @@ export class Game {
     this.status = RUNNING;
   }
 
-  // Beginner: 9x9, 10
-  // Intermediate: 16x16, 40
-  // Expert: 16x30, 99
   static build(rowCount, columnCount, mineCount) {
     const grid = new Grid.Grid(rowCount, columnCount);
     for (const index of randomIndexes(grid.squareCount, mineCount)) {

@@ -128,6 +128,11 @@ class Minesweeper extends React.Component {
     this.setState(this.getGameState());
   }
 
+  handleNewGame(rows, cols, mines) {
+    this.game = Game.build(rows, cols, mines);
+    this.syncGameState();
+  }
+
   handleSquareClick(index) {
     if (this.game.grid.isRevealedAt(index)) {
       this.game.revealAdjacent(index);
@@ -149,13 +154,20 @@ class Minesweeper extends React.Component {
         <header>
           Remaining: {minesRemaining}, {status}
         </header>
-        <Grid
-          rows={rows}
-          cols={cols}
-          squares={squares}
-          onSquareClick={this.handleSquareClick}
-          onSquareFlag={this.handleSquareFlag}
-        />
+        <main>
+          <Grid
+            rows={rows}
+            cols={cols}
+            squares={squares}
+            onSquareClick={this.handleSquareClick}
+            onSquareFlag={this.handleSquareFlag}
+          />
+        </main>
+        <footer>
+          <button onClick={() => this.handleNewGame(9, 9, 10)}>Beginner</button>
+          <button onClick={() => this.handleNewGame(16, 16, 40)}>Intermediate</button>
+          <button onClick={() => this.handleNewGame(16, 30, 99)}>Expert</button>
+        </footer>
       </div>
     );
   }
