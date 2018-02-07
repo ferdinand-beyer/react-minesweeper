@@ -63,7 +63,7 @@ export class Game {
 
   toggleFlag(index) {
     const grid = this.grid;
-    if (!grid.isRevealedAt(index)) {
+    if ((this.status === RUNNING) && !grid.isRevealedAt(index)) {
       if (grid.isFlaggedAt(index)) {
         grid.clearFlagAt(index);
       } else {
@@ -73,7 +73,7 @@ export class Game {
   }
 
   reveal(index) {
-    if (!this.grid.isFlaggedAt(index)) {
+    if ((this.status === RUNNING) && !this.grid.isFlaggedAt(index)) {
       this.doReveal(index);
     }
   }

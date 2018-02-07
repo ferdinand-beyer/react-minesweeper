@@ -82,7 +82,7 @@ describe('When the player reveals a square', () => {
       expect(Grid.isExploded(game.squares[8]));
     });
 
-    test('he loses the game', () => {
+    test('she loses the game', () => {
       expect(game.isOver()).toBe(true);
       expect(game.isWon()).toBe(false);
     });
@@ -91,6 +91,16 @@ describe('When the player reveals a square', () => {
       for (const square of game.squares) {
         expect(Grid.containsMine(square)).toBe(Grid.isRevealed(square));
       }
+    });
+
+    test('she cannot reveal more squares', () => {
+      game.reveal(3);
+      expect(game.grid.isRevealedAt(3)).toBeFalsy();
+    });
+
+    test('she cannot toggle flags any more', () => {
+      game.toggleFlag(3);
+      expect(game.grid.isFlaggedAt(3)).toBeFalsy();
     });
   });
 });
