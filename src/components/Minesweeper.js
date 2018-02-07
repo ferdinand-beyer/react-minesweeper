@@ -25,19 +25,22 @@ class Square extends React.Component {
 
   className() {
     const value = this.props.value;
+    const classes = [];
     if (GridMod.isFlagged(value)) {
-      return 'flagged';
+      classes.push('flagged');
     }
-    if (!GridMod.isRevealed(value)) {
-      return 'active';
-    }
-    const classes = [
-      'revealed',
-    ];
-    if (!GridMod.containsMine(value)) {
-      classes.push('adjacent' + GridMod.adjacentMineCount(value));
-    } else if (GridMod.isExploded(value)) {
-      classes.push('exploded');
+    if (GridMod.isRevealed(value)) {
+      classes.push('revealed');
+      if (GridMod.containsMine(value)) {
+        classes.push('mine');
+        if (GridMod.isExploded(value)) {
+          classes.push('exploded');
+        }
+      } else {
+        classes.push('adjacent' + GridMod.adjacentMineCount(value));
+      }
+    } else {
+      classes.push('active');
     }
     return classes.join(' ');
   }

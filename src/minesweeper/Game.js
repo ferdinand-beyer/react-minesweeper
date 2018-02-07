@@ -122,6 +122,9 @@ export class Game {
       if (square & Grid.MINE) {
         array[index] |= Grid.REVEALED;
       }
+      if (array[index] & Grid.FLAGGED) {
+        array[index] |= Grid.REVEALED;
+      }
     });
   }
 
@@ -129,6 +132,9 @@ export class Game {
     this.grid.squares.forEach((square, index, array) => {
       if (square & Grid.MINE) {
         array[index] |= Grid.FLAGGED;
+      }
+      if (array[index] & Grid.FLAGGED) {
+        array[index] |= Grid.REVEALED;
       }
     });
   }

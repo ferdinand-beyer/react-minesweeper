@@ -75,6 +75,7 @@ describe('When the player reveals a square', () => {
 
   describe('and the square contains a mine', () => {
     beforeEach(() => {
+      game.toggleFlag(4);
       game.reveal(8);
     });
 
@@ -89,8 +90,18 @@ describe('When the player reveals a square', () => {
 
     test('all mines are revealed', () => {
       for (const square of game.squares) {
-        expect(Grid.containsMine(square)).toBe(Grid.isRevealed(square));
+        if (Grid.containsMine(square)) {
+          expect(Grid.containsMine(square)).toBeTruthy();
+        }
       }
+    });
+
+    test('all flags are revealed', () => {
+      game.squares.forEach(square => {
+        if (Grid.isFlagged(square)) {
+          expect(Grid.isRevealed(square)).toBeTruthy();
+        }
+      });
     });
 
     test('she cannot reveal more squares', () => {
@@ -100,7 +111,9 @@ describe('When the player reveals a square', () => {
 
     test('she cannot toggle flags any more', () => {
       game.toggleFlag(3);
+      game.toggleFlag(4);
       expect(game.grid.isFlaggedAt(3)).toBeFalsy();
+      expect(game.grid.isFlaggedAt(4)).toBeTruthy();
     });
   });
 });
@@ -169,18 +182,26 @@ describe('When the player reveals the last square', () => {
       expect(game.grid.isFlaggedAt(index)).toBeTruthy();
     });
   });
+
+  test('all flags are revealed', () => {
+    game.squares.forEach(square => {
+      if (Grid.isFlagged(square)) {
+        expect(Grid.isRevealed(square)).toBeTruthy();
+      }
+    });
+  });
 });
 
 describe('When the player reveals adjacent squares', () => {
   let game;
 
   beforeEach(() => {
-    game = buildGame(3, 4, [3, 8]);
+    game = buildGame(3, 4, [6]);
   });
 
-  // 0  1  2  3!
-  // 4  5  6  7
-  // 8! 9 10 11
+  // 0  1  2  3
+  // 4  5  6! 7
+  // 8  9 10 11
 
   describe('and the target square is not revealed', () => {
     test('nothing happens', () => {
@@ -201,28 +222,27 @@ describe('When the player reveals adjacent squares', () => {
 
     test('and too many adjacent squares are flagged, nothing happens', () => {
       game.toggleFlag(0);
-      game.toggleFlag(8);
+      game.toggleFlag(6);
       game.revealAdjacent(5);
       expect(game.grid.revealCount).toBe(1);
     });
 
     describe('and the number of adjacent flag equals the number of adjacent mines', () => {
       test('all adjacent non-flagged squares are revealed', () => {
-        game.toggleFlag(8);
+        game.toggleFlag(6);
         game.revealAdjacent(5);
-        for (let i of [0, 1, 2, 6, 10, 9, 4]) {
+        for (let i of [0, 1, 2, 10, 9, 8, 4]) {
           expect(game.grid.isRevealedAt(i)).toBeTruthy();
         }
       });
 
       test('adjacent flagged squares are not revealed', () => {
-        game.toggleFlag(8);
+        game.toggleFlag(6);
         game.revealAdjacent(5);
-        expect(game.grid.isRevealedAt(8)).toBeFalsy();
+        expect(game.grid.isRevealedAt(6)).toBeFalsy();
       });
     })
   });
 });
 
-// TODO: When game-over, mark correct/incorrect flags
 // TODO: Protect first move
