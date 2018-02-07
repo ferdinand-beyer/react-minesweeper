@@ -117,6 +117,7 @@ class Minesweeper extends React.Component {
       rows: game.rowCount,
       cols: game.columnCount,
       squares: [...game.squares],
+      status: game.isOver() ? (game.isWon() ? 'win' : 'lose') : 'playing',
       minesRemaining: game.remainingMineCount,
     };
   }
@@ -136,11 +137,11 @@ class Minesweeper extends React.Component {
   }
 
   render() {
-    const { rows, cols, squares, minesRemaining } = this.state;
+    const { rows, cols, squares, minesRemaining, status } = this.state;
     return (
       <div className="Minesweeper">
         <header>
-          Remaining: {minesRemaining}
+          Remaining: {minesRemaining}, {status}
         </header>
         <Grid
           rows={rows}
