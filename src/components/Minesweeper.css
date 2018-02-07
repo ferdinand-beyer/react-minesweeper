@@ -39,16 +39,17 @@
 }
 
 .Minesweeper td.flagged {
-  color: #00f;
+  color: #f00;
 }
 
 .Minesweeper td.flagged.revealed {
-  color: #f00;
+  background-color: #f00;
+  color: #000;
 }
 
 .Minesweeper td.flagged.revealed.mine {
   background-color: #ccc;
-  color: #090;
+  color: #f00;
 }
 
 .Minesweeper td.exploded {
