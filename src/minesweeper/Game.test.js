@@ -37,6 +37,14 @@ describe('When the player reveals a square', () => {
     game = buildGame(4, 4, [8, 13, 15]);
   });
 
+  describe('and the square is flagged', () => {
+    test('the square is not revealed', () => {
+      game.toggleFlag(5);
+      game.reveal(5);
+      expect(Grid.isRevealed(game.squares[5])).toBeFalsy();
+    });
+  });
+
   describe('and the square contains no mine', () => {
     test('the number of adjacent mines is shown', () => {
       game.reveal(5);
@@ -50,6 +58,17 @@ describe('When the player reveals a square', () => {
       const revealedIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11];
       game.squares.forEach((square, index) => {
         expect(Grid.isRevealed(square)).toBe(revealedIndexes.includes(index));
+      });
+    });
+
+    test('flags on auto-revaled squares are removed', () => {
+      const flagIndexes = [1, 2, 3];
+      for (let index of flagIndexes){
+        game.toggleFlag(index);
+      }
+      game.reveal(0);
+      flagIndexes.forEach(index => {
+        expect(Grid.isFlagged(game.squares[index])).toBeFalsy();
       });
     });
   });

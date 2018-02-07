@@ -85,13 +85,17 @@ export class Grid {
   }
 
   placeFlagAt(index) {
-    this.setSquareFlag(index, FLAGGED);
-    this.flagCount++;
+    if (!this.testSquareFlag(index, FLAGGED)) {
+      this.setSquareFlag(index, FLAGGED);
+      this.flagCount++;
+    }
   }
 
   clearFlagAt(index) {
-    this.clearSquareFlag(index, FLAGGED);
-    this.flagCount--;
+    if (this.testSquareFlag(index, FLAGGED)) {
+      this.clearSquareFlag(index, FLAGGED);
+      this.flagCount--;
+    }
   }
 
   testSquareFlag(index, flag) {

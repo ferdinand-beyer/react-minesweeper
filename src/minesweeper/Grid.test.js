@@ -141,4 +141,37 @@ describe('When placing a flag', () => {
   test('the flag count is incremented', () => {
     expect(grid.flagCount).toBe(1);
   });
+
+  describe('and the square already flagged', () => {
+    test('the flag count is not changed', () => {
+      grid.placeFlagAt(3);
+      expect(grid.flagCount).toBe(1);
+    });
+  });
+});
+
+describe('When removing a flag', () => {
+  let grid;
+
+  beforeEach(() => {
+    grid = new Grid(4, 4);
+    grid.placeFlagAt(3);
+    grid.clearFlagAt(3);
+  });
+
+  test('the square is no longer marked as flagged', () => {
+    expect(grid.isFlaggedAt(3)).toBeFalsy();
+    expect(isFlagged(grid.squares[3])).toBeFalsy();
+  });
+
+  test('the flag count is decremented', () => {
+    expect(grid.flagCount).toBe(0);
+  });
+
+  describe('and the square was not flagged before', () => {
+    test('the flag count is not changed', () => {
+      grid.clearFlagAt(3);
+      expect(grid.flagCount).toBe(0);
+    });
+  });
 });

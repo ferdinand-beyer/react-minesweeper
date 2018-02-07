@@ -5,6 +5,7 @@ import './Minesweeper.css'
 
 const NBSP = '\u00A0';
 const FLAG = '\u2691';
+const BOMB = '\uD83D\uDCA3';
 
 class Square extends React.Component {
   text() {
@@ -106,7 +107,7 @@ class Minesweeper extends React.Component {
     this.handleSquareClick = this.handleSquareClick.bind(this);
     this.handleSquareFlag = this.handleSquareFlag.bind(this);
 
-    this.game = Game.build(16, 16, 40);
+    this.game = Game.build(9, 9, 10);
     this.state = this.getGameState();
   }
 

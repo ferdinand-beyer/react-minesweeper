@@ -73,17 +73,24 @@ export class Game {
   }
 
   reveal(index) {
-    let square = this.grid.squares[index];
-    if (square & Grid.REVEALED) {
+    if (!this.grid.isFlaggedAt(index)) {
+      this.doReveal(index);
+    }
+  }
+
+  doReveal(index) {
+    if (this.grid.isRevealedAt(index)) {
       return;
     }
-    this.grid.squares[index] |= Grid.REVEALED;
+    this.grid.revealAt(index);
+    this.grid.clearFlagAt(index);
+    let square = this.grid.squares[index];
     if (square & Grid.MINE) {
       this.grid.squares[index] |= Grid.EXPLODED;
       this.revealAllMines();
       this.status = LOST;
     } else if (Grid.adjacentMineCount(this.grid.squares[index]) === 0) {
-      this.grid.forEachAdjacent(index, this.reveal.bind(this));
+      this.grid.forEachAdjacent(index, this.doReveal.bind(this));
     }
   }
 
