@@ -101,7 +101,7 @@ class Minesweeper extends React.Component {
     this.handleSquareClick = this.handleSquareClick.bind(this);
     this.handleSquareFlag = this.handleSquareFlag.bind(this);
 
-    this.game = new Game(16, 16, 40);
+    this.game = Game.build(16, 16, 40);
     this.state = this.getGameState();
   }
 

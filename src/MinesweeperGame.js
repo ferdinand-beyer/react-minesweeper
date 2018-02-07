@@ -1,4 +1,4 @@
-// Minesweeper game
+import * as Grid from './minesweeper/Grid.js';
 
 function randomSample(sequence, k) {
   const pool = Array.from(sequence);
@@ -31,15 +31,17 @@ const LOST = 2;
 // Expert: 16x30, 99
 
 export class Game {
-  constructor(rowCount, columnCount, mineCount = 0) {
-    this.rowCount = rowCount;
-    this.columnCount = columnCount;
-    this.squares = Array(rowCount * columnCount).fill(0);
-    this.mineCount = 0;
+  constructor(grid) {
+    this.grid = grid;
     this.status = RUNNING;
-    if (mineCount > 0) {
-      this.placeRandomMines(mineCount);
+  }
+
+  static build(rowCount, columnCount, mineCount) {
+    const grid = new Grid.Grid(rowCount, columnCount);
+    for (const index of randomIndexes(grid.squareCount, mineCount)) {
+      grid.placeMineAt(index);
     }
+    return new Game(grid);
   }
 
   static containsMine(square) {
@@ -62,6 +64,18 @@ export class Game {
     return square & ADJACENT_MASK;
   }
 
+  get rowCount() {
+    return this.grid.rowCount;
+  }
+
+  get columnCount() {
+    return this.grid.columnCount;
+  }
+
+  get squares() {
+    return this.grid.squares;
+  }
+
   isOver() {
     return this.status !== RUNNING;
   }
@@ -70,72 +84,33 @@ export class Game {
     return this.status === WON;
   }
 
-  placeRandomMines(count) {
-    for (const index of randomIndexes(this.squares.length, count)) {
-      this.placeMineAt(index);
-    }
-  }
-
-  placeMineAt(index) {
-    this.squares[index] |= MINE;
-    this.mineCount++;
-    this.forEachAdjacent(index, i => {
-      this.squares[i] = ((this.squares[i] & ADJACENT_MASK) + 1) | (this.squares[i] & ~ADJACENT_MASK);
-    });
-  }
-
   toggleFlag(index) {
-    if ((this.squares[index] & REVEALED) === 0) {
-      this.squares[index] ^= FLAGGED;
+    if ((this.grid.squares[index] & REVEALED) === 0) {
+      this.grid.squares[index] ^= FLAGGED;
     }
   }
 
   reveal(index) {
-    let square = this.squares[index];
+    let square = this.grid.squares[index];
     if (square & REVEALED) {
       return;
     }
-    this.squares[index] |= REVEALED;
+    this.grid.squares[index] |= REVEALED;
     if (square & MINE) {
-      this.squares[index] |= EXPLODED;
+      this.grid.squares[index] |= EXPLODED;
       this.revealAllMines();
       this.status = LOST;
-    } else if (Game.adjacentMineCount(this.squares[index]) === 0) {
-      this.forEachAdjacent(index, this.reveal.bind(this));
+    } else if (Grid.adjacentMineCount(this.grid.squares[index]) === 0) {
+      this.grid.forEachAdjacent(index, this.reveal.bind(this));
     }
   }
 
   revealAllMines() {
-    this.squares.forEach((square, index, array) => {
+    this.grid.squares.forEach((square, index, array) => {
       if (square & MINE) {
         array[index] |= REVEALED;
       }
     });
-  }
-
-  adjacentIndexes(index) {
-    let indexes = [];
-    this.forEachAdjacent(index, indexes.push.bind(indexes));
-    return indexes;
-  }
-
-  forEachAdjacent(index, f) {
-    const stride = this.columnCount;
-    const col = index % stride;
-
-    const north = (index >= stride);
-    const south = (index < (this.squares.length - stride));
-    const west = (col > 0);
-    const east = (col < (stride - 1));
-
-    north && west && f(index - stride - 1);
-    north && f(index - stride);
-    north && east && f(index - stride + 1);
-    east && f(index + 1);
-    south && east && f(index + stride + 1);
-    south && f(index + stride);
-    south && west && f(index + stride - 1);
-    west && f(index - 1);
   }
 }
 
