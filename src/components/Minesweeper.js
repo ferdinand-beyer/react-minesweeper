@@ -5,7 +5,6 @@ import './Minesweeper.css'
 
 const NBSP = '\u00A0';
 const FLAG = '\u2691';
-const BOMB = '\uD83D\uDCA3';
 
 class Square extends React.Component {
   text() {

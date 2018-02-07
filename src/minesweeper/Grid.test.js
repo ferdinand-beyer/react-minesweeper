@@ -107,6 +107,42 @@ describe('When placing multiple mines in the grid', () => {
   });
 });
 
+describe('When removing a mine from a square', () => {
+  let grid;
+
+  beforeEach(() => {
+    grid = new Grid(3, 3);
+    grid.placeMineAt(4);
+    grid.placeMineAt(5);
+    grid.clearMineAt(4);
+  });
+
+  test('the mine count is decremented', () => {
+    expect(grid.mineCount).toBe(1);
+  });
+
+  test('exactly one square contains a mine', () => {
+    grid.squares.forEach((square, index) => {
+      expect(containsMine(square)).toBe(index === 5);
+    });
+  });
+
+  test('the adjacent mine count in adjacent squares is decremented', () => {
+    expect(grid.squares.map(adjacentMineCount)).toEqual([
+      0, 1, 1,
+      0, 1, 0,
+      0, 1, 1,
+    ]);
+  });
+
+  describe('and the square contains no mine', () => {
+    test('the mine count is not changed', () => {
+      grid.clearMineAt(4);
+      expect(grid.mineCount).toBe(1);
+    });
+  });
+});
+
 describe('When revealing a square', () => {
   let grid;
 

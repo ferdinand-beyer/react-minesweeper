@@ -43,6 +43,10 @@ export class Grid {
     return this.testSquareFlag(index, FLAGGED);
   }
 
+  containsMineAt(index) {
+    return this.testSquareFlag(index, MINE);
+  }
+
   adjacentIndexes(index) {
     let indexes = [];
     this.forEachAdjacent(index, indexes.push.bind(indexes));
@@ -80,7 +84,18 @@ export class Grid {
     this.setSquareFlag(index, MINE);
     this.mineCount++;
     this.forEachAdjacent(index, i => {
-      this.squares[i] = ((this.squares[i] & ADJACENT_MASK) + 1) | (this.squares[i] & ~ADJACENT_MASK);
+      this.incrementAdjacentMineCount(i, 1);
+    });
+  }
+
+  clearMineAt(index) {
+    if (!this.testSquareFlag(index, MINE)) {
+      return;
+    }
+    this.clearSquareFlag(index, MINE);
+    this.mineCount--;
+    this.forEachAdjacent(index, i => {
+      this.incrementAdjacentMineCount(i, -1);
     });
   }
 
@@ -108,5 +123,10 @@ export class Grid {
 
   clearSquareFlag(index, flag) {
     this.squares[index] &= ~flag;
+  }
+
+  incrementAdjacentMineCount(index, delta) {
+    const square = this.squares[index];
+    this.squares[index] = ((square & ADJACENT_MASK) + delta) | (square & ~ADJACENT_MASK);
   }
 }

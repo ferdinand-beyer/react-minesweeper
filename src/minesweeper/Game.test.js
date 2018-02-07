@@ -75,7 +75,10 @@ describe('When the player reveals a square', () => {
 
   describe('and the square contains a mine', () => {
     beforeEach(() => {
+      // Flag to be revealed for the "lose" case.
       game.toggleFlag(4);
+      // Reveal another square first because the first move is protected.
+      game.reveal(5);
       game.reveal(8);
     });
 
@@ -157,6 +160,23 @@ describe('When the user flags a square', () => {
     test('the flag is removed', () => {
       expect(Grid.isFlagged(game.squares[1])).toBeFalsy();
     });
+  });
+});
+
+describe('When the player reveals a mine on her first move', () => {
+  let game;
+
+  beforeEach(() => {
+    game = buildGame(3, 3, [4]);
+    game.reveal(4);
+  });
+
+  test('the square is cleared from the mine', () => {
+    expect(Grid.containsMine(game.squares[4])).toBeFalsy();
+  });
+
+  test('the mine count stays the same', () => {
+    expect(game.grid.mineCount).toBe(1);
   });
 });
 
@@ -244,5 +264,3 @@ describe('When the player reveals adjacent squares', () => {
     })
   });
 });
-
-// TODO: Protect first move

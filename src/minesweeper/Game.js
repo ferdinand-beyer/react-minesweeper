@@ -1,11 +1,15 @@
 import * as Grid from './Grid.js';
 
+function randomIndex(n) {
+  return Math.floor(Math.random() * n);
+}
+
 function randomSample(sequence, k) {
   const pool = Array.from(sequence);
   const n = pool.length;
   const result = new Array(k);
   for (let i = 0; i < k; i++) {
-    let j = Math.floor(Math.random() * (n - i));
+    let j = randomIndex(n - i);
     result[i] = pool[j];
     pool[j] = pool[n - i - 1];
   }
@@ -74,6 +78,9 @@ export class Game {
 
   reveal(index) {
     if ((this.status === RUNNING) && !this.grid.isFlaggedAt(index)) {
+      if (this.isProtectedReveal(index)) {
+        this.moveMine(index);
+      }
       this.doReveal(index);
     }
   }
@@ -101,6 +108,27 @@ export class Game {
     } else if (Grid.adjacentMineCount(this.grid.squares[index]) === 0) {
       this.grid.forEachAdjacent(index, this.doReveal.bind(this));
     }
+  }
+
+  isProtectedReveal(index) {
+    return (this.grid.revealCount === 0) && this.grid.containsMineAt(index);
+  }
+
+  moveMine(index) {
+    const newIndex = this.randomFreeSquare();
+    this.grid.clearMineAt(index);
+    this.grid.placeMineAt(newIndex);
+  }
+
+  randomFreeSquare() {
+    const grid = this.grid;
+    let nth = randomIndex(grid.squareCount - grid.mineCount);
+    for (let i = 0; i < grid.squareCount; i++) {
+      if (!grid.containsMineAt(i) && (nth-- === 0)) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   allSquaresRevealed() {
